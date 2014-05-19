@@ -55,15 +55,16 @@ usbasploader.raw: ../firmware/main.elf $(DEPENDS)
 usbasploader.o: usbasploader.raw $(DEPENDS)
 	$(OBC) -B $(MCUARCH) -I binary -O elf32-avr --rename-section .data=.text --redefine-sym _binary_usbasploader_raw_start=usbasploader  usbasploader.raw usbasploader.o
 
-
+# Mac:    stat -f %z file
+# Linux?: stat -c %s file
 updater.o: updater.c usbasploader.h usbasploader.raw usbasploader.o $(DEPENDS)
 ifndef UPDATECRC32
-	$(CC) updater.c -c -o updater.o -DSIZEOF_new_firmware=$(shell stat -c %s usbasploader.raw) $(CFLAGS)
+	$(CC) updater.c -c -o updater.o -DSIZEOF_new_firmware=$(shell stat -f %z usbasploader.raw) $(CFLAGS)
 else
 ifeq ($(UPDATECRC32), 0)
-	$(CC) updater.c -c -o updater.o -DSIZEOF_new_firmware=$(shell stat -c %s usbasploader.raw) -DUPDATECRC32=0x$(shell crc32 usbasploader.raw) $(CFLAGS)
+	$(CC) updater.c -c -o updater.o -DSIZEOF_new_firmware=$(shell stat -f %z usbasploader.raw) -DUPDATECRC32=0x$(shell crc32 usbasploader.raw) $(CFLAGS)
 else
-	$(CC) updater.c -c -o updater.o -DSIZEOF_new_firmware=$(shell stat -c %s usbasploader.raw) -DUPDATECRC32=$(UPDATECRC32) $(CFLAGS)
+	$(CC) updater.c -c -o updater.o -DSIZEOF_new_firmware=$(shell stat -f %z usbasploader.raw) -DUPDATECRC32=$(UPDATECRC32) $(CFLAGS)
 endif
 endif
 # 	$(CC) updater.c -c -o updater.o $(CFLAGS)

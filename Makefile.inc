@@ -5,8 +5,10 @@
 # Tabsize: 4
 # License: GNU GPL v2 (see License.txt)
 
-F_CPU = 16000000
-DEVICE = atmega8
+AVR8TOOLCHAINBINDIR=/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/
+AVRDUDEBINDIR=$(AVR8TOOLCHAINBINDIR)
+F_CPU = 20000000
+DEVICE = atmega328p
 
 # where the updating firmware should be located (starting address)
 FLASHADDRESS = 0x0000
@@ -37,7 +39,8 @@ DANGEROUS=0
 
 # PROGRAMMER contains AVRDUDE options to address your programmer
 # PROGRAMMER = -c pony-stk200
-PROGRAMMER = -c usbasp
+# PROGRAMMER = -c usbasp
+PROGRAMMER = -C /Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/etc/avrdude.conf -P /dev/tty.usbserial-A9005bvI -b 19200 -c avrisp
 
 #  since USBaspLoader supports HAVE_BLB11_SOFTW_LOCKBIT...
 LOCKOPT = -U lock:w:0x3f:m
@@ -157,7 +160,8 @@ endif
 
 
 
-FUSEOPT_328             = -U lfuse:w:0xd7:m -U hfuse:w:0xd0:m -U efuse:w:0x04:m
+#FUSEOPT_328            = -U lfuse:w:0xd7:m -U hfuse:w:0xd0:m -U efuse:w:0x04:m
+FUSEOPT_328             = -U lfuse:w:0xF7:m -U hfuse:w:0xD8:m -U efuse:w:0x07:m
 BOOTLOADER_ADDRESS_328  = 0x7000
 DEFINES_328             = #-DEMPTY
 
